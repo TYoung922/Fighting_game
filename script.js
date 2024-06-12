@@ -172,7 +172,7 @@ const keys = {
 
 decreaseTimer();
 
-function animate(params) {
+function animate() {
   window.requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
