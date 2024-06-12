@@ -12,20 +12,24 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
   );
 }
 
-const reload = document.getElementById("reload");
+// const reload = document.getElementById("reload");
 
 function determineWinner({ player, enemy, timerId }) {
   clearTimeout(timerId);
-  document.querySelector("#displayText").style.display = "flex";
-  // document.querySelector("#reload").style.display = "block";
+  // document.querySelector("#result").style.display = "block";
+  // document.querySelector("#refresh").style.display = "block";
+  document.querySelector("#result").style.visibility = "visible";
+  document.querySelector("#refresh").style.visibility = "visible";
+  // reload.style.display = "block";
+  // reload.style.visibility = "visible";
   if (player.health === enemy.health) {
-    document.querySelector("#displayText").innerHTML = "Tie";
+    document.querySelector("#result").innerHTML = "Tie";
   } else if (player.health > enemy.health) {
-    document.querySelector("#displayText").innerHTML = "Player 1 Wins!";
-    reload.style.display = "block";
+    document.querySelector("#result").innerHTML = "Player 1 Wins!";
+    // reload.style.display = "block";
   } else if (player.health < enemy.health) {
-    document.querySelector("#displayText").innerHTML = "Player 2 Wins!";
-    reload.style.display = "block";
+    document.querySelector("#result").innerHTML = "Player 2 Wins!";
+    // reload.style.display = "block";
   }
 }
 

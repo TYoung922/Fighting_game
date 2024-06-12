@@ -132,21 +132,22 @@
           right: 0;
           bottom: 0;
           left: 0;
-          display: none;
+          display: flex;
           flex-direction: column;
           -webkit-text-stroke-width: 2px;
           -webkit-text-stroke-color: black;
         "
       >
-        Players Fight!
+        <h2 id="result" style="visibility: hidden">Result</h2>
         <br /><br />
         <button
-          id="reload"
+          id="refresh"
           onClick="window.location.reload()"
           style="
             padding: 10;
             border-radius: 10px;
             box-shadow: 5px 10px 10px black;
+            visibility: hidden;
           "
         >
           Play Again!
