@@ -11,6 +11,12 @@ class Sprite {
     this.height = 150;
     this.image = new Image();
     this.image.src = imageSrc;
+
+    this.image.onload = () => {
+      this.width = this.image.width / framesMax;
+      this.height = this.image.height;
+    };
+
     this.scale = scale;
     this.framesMax = framesMax;
     this.frameCurrent = 0;
