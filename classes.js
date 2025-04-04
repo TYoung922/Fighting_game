@@ -98,27 +98,47 @@ class Fighter extends Sprite {
     this.sprites = sprites;
     this.dead = false;
 
+    this.spritesLoaded = {}; // New object to track sprite loading status
+
+    // Load each sprite image and set up the 'loaded' flag
     for (const sprite in this.sprites) {
-      sprites[sprite].image = new Image();
-      sprites[sprite].image.src = sprites[sprite].imageSrc;
+      this.sprites[sprite].image = new Image();
+      this.sprites[sprite].image.src = this.sprites[sprite].imageSrc;
+
+      this.sprites[sprite].image.onload = () => {
+        this.spritesLoaded[sprite] = true;
+        // Log loading status for debugging
+        console.log(`${sprite} sprite loaded`);
+      };
+
+      // Optional: Handle error if image fails to load
+      this.sprites[sprite].image.onerror = (err) => {
+        console.error(`Failed to load ${sprite} sprite:`, err);
+      };
     }
   }
 
+  // Check if all sprite images are loaded
+  areSpritesLoaded() {
+    return (
+      Object.keys(this.spritesLoaded).length ===
+        Object.keys(this.sprites).length &&
+      Object.values(this.spritesLoaded).every((loaded) => loaded === true)
+    );
+  }
+
   update() {
+    if (!this.areSpritesLoaded()) {
+      // If the sprites are not loaded, do not update the fighter yet
+      return;
+    }
+
     this.draw();
     if (!this.dead) this.animateFrames();
 
     // attack boxes
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
     this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
-
-    // draw attack box
-    // c.fillRect(
-    //   this.attackBox.position.x,
-    //   this.attackBox.position.y,
-    //   this.attackBox.width,
-    //   this.attackBox.height
-    // );
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
