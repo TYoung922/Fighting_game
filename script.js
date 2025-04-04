@@ -60,7 +60,7 @@ const player = new Fighter({
       framesMax: 2,
     },
     fall: {
-      imageSrc: "./Martial_Hero/Sprites/fall.png",
+      imageSrc: "./Martial_Hero/Sprites/Fall.png",
       framesMax: 2,
     },
     attack1: {
@@ -121,7 +121,7 @@ const enemy = new Fighter({
       framesMax: 2,
     },
     fall: {
-      imageSrc: "./Martial_Hero2/Sprites/fall.png",
+      imageSrc: "./Martial_Hero2/Sprites/Fall.png",
       framesMax: 2,
     },
     attack1: {
