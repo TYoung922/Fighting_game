@@ -8,10 +8,14 @@ c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.7;
 
+function isOnGround(sprite) {
+  return sprite.position.y + sprite.height >= groundY;
+}
+
 const background = new Sprite({
   position: {
     x: 0,
-    y: 0,
+    y: -46,
   },
   imageSrc: "./oak_woods_v1/oak_wood_bg.png",
 });
@@ -19,17 +23,19 @@ const background = new Sprite({
 const shop = new Sprite({
   position: {
     x: 600,
-    y: 129,
+    y: 83,
   },
   imageSrc: "./oak_woods_v1/decorations/shop_anim.png",
   scale: 2.5,
   framesMax: 6,
 });
 
+const groundY = canvas.height - 96; // Fixed ground level for all sprites
+
 const player = new Fighter({
   position: {
     x: 150,
-    y: 0,
+    y: groundY - 330, // Adjust based on sprite height and offset
   },
   velocity: {
     x: 0,
@@ -89,7 +95,7 @@ const player = new Fighter({
 const enemy = new Fighter({
   position: {
     x: 800,
-    y: 100,
+    y: groundY - 330, // Adjust based on sprite height and offset
   },
   velocity: {
     x: 0,
@@ -198,10 +204,25 @@ function animate() {
   }
 
   // jummping
-  if (player.velocity.y < 0) {
-    player.switchSprite("jump");
-  } else if (player.velocity.y > 0) {
-    player.switchSprite("fall");
+  if (keys.w.pressed) {
+    if (player.velocity.y < 0) {
+      player.switchSprite("jump");
+    } else if (player.velocity.y > 0) {
+      player.switchSprite("fall");
+    }
+  }
+
+  // Apply gravity
+  player.velocity.y += gravity;
+
+  // Apply vertical movement
+  player.position.y += player.velocity.y;
+
+  // Ground collision (AFTER applying velocity)
+  if (player.position.y + player.height >= groundY) {
+    player.velocity.y = 0;
+    player.position.y = groundY - player.height;
+    console.log("Hit the ground");
   }
 
   //   enemy movement
@@ -216,10 +237,24 @@ function animate() {
   }
 
   // enemy jummping
-  if (enemy.velocity.y < 0) {
-    enemy.switchSprite("jump");
-  } else if (enemy.velocity.y > 0) {
-    enemy.switchSprite("fall");
+  if (keys.ArrowUp.pressed) {
+    if (enemy.velocity.y < 0) {
+      enemy.switchSprite("jump");
+    } else if (enemy.velocity.y > 0) {
+      enemy.switchSprite("fall");
+    }
+  }
+
+  //aply gravity enemy
+  enemy.velocity.y += gravity;
+
+  //aply vertical movement enemy
+  enemy.position.y += enemy.velocity.y;
+
+  // ground collision enem
+  if (enemy.position.y + enemy.height >= groundY) {
+    enemy.velocity.y = 0;
+    enemy.position.y = groundY - player.height;
   }
 
   //   detect for collision
@@ -267,6 +302,7 @@ function animate() {
   if (enemy.health <= 0 || player.health < +0) {
     determineWinner({ player, enemy, timerId });
   }
+  // console.log("Player height:", player.height, "Player Y:", player.position.y);
 }
 
 animate();
@@ -283,7 +319,13 @@ window.addEventListener("keydown", (event) => {
         player.lastKey = "a";
         break;
       case "w":
-        player.velocity.y = -20;
+        keys.w.pressed = true;
+        console.log("W pressed. isOnGround:", isOnGround(player));
+        // player.velocity.y = -20;
+        if (isOnGround(player)) {
+          player.velocity.y = -20; // or whatever jump strength you want
+          console.log("Player jumps!");
+        }
         break;
       case " ":
         player.attack();
@@ -303,6 +345,7 @@ window.addEventListener("keydown", (event) => {
         enemy.lastKey = "ArrowLeft";
         break;
       case "ArrowUp":
+        keys.ArrowUp.pressed = true;
         enemy.velocity.y = -20;
         break;
       case "ArrowDown":
